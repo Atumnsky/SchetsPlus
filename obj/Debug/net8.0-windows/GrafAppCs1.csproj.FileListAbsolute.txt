@@ -1,0 +1,14 @@
+C:\Users\He\Documents\GitHub\SchetsPlus\GrafAppCs1\obj\Debug\net8.0-windows\GrafAppCs1.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\He\Documents\GitHub\SchetsPlus\GrafAppCs1\obj\Debug\net8.0-windows\GrafAppCs1.AssemblyInfoInputs.cache
+C:\Users\He\Documents\GitHub\SchetsPlus\GrafAppCs1\obj\Debug\net8.0-windows\GrafAppCs1.AssemblyInfo.cs
+C:\Users\He\Documents\GitHub\SchetsPlus\GrafAppCs1\obj\Debug\net8.0-windows\GrafAppCs1.csproj.CoreCompileInputs.cache
+C:\Users\He\Documents\GitHub\SchetsPlus\GrafAppCs1\bin\Debug\net8.0-windows\GrafAppCs1.exe
+C:\Users\He\Documents\GitHub\SchetsPlus\GrafAppCs1\bin\Debug\net8.0-windows\GrafAppCs1.deps.json
+C:\Users\He\Documents\GitHub\SchetsPlus\GrafAppCs1\bin\Debug\net8.0-windows\GrafAppCs1.runtimeconfig.json
+C:\Users\He\Documents\GitHub\SchetsPlus\GrafAppCs1\bin\Debug\net8.0-windows\GrafAppCs1.dll
+C:\Users\He\Documents\GitHub\SchetsPlus\GrafAppCs1\bin\Debug\net8.0-windows\GrafAppCs1.pdb
+C:\Users\He\Documents\GitHub\SchetsPlus\GrafAppCs1\obj\Debug\net8.0-windows\GrafAppCs1.dll
+C:\Users\He\Documents\GitHub\SchetsPlus\GrafAppCs1\obj\Debug\net8.0-windows\refint\GrafAppCs1.dll
+C:\Users\He\Documents\GitHub\SchetsPlus\GrafAppCs1\obj\Debug\net8.0-windows\GrafAppCs1.pdb
+C:\Users\He\Documents\GitHub\SchetsPlus\GrafAppCs1\obj\Debug\net8.0-windows\GrafAppCs1.genruntimeconfig.cache
+C:\Users\He\Documents\GitHub\SchetsPlus\GrafAppCs1\obj\Debug\net8.0-windows\ref\GrafAppCs1.dll
