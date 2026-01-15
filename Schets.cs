@@ -40,4 +40,31 @@ public class Schets
     {
         bitmap.RotateFlip(RotateFlipType.Rotate90FlipNone);
     }
+
+    /////////////////////////////////////////////////////////////////
+    public void TekenActie(Graphics gr, SchetsControl s)
+    {
+        
+    }
+    
+    public void AllesTekenen(Graphics gr, SchetsControl s)
+    {
+        Graphics g = Graphics.FromImage(bitmap);
+        g.Clear(Color.White);
+
+        Point startpunt;
+        Point eindpunt;
+        Brush kwast;
+
+        //elk elementen apart tekenen, en niet als geheel 1 bitmap
+        foreach (var actie in s.acties)
+        {
+            int n = 0;
+            n++;
+            startpunt = s.acties[n].;
+            TekenActie(gr, s);
+        }
+    }
+
+    /////////////////////////////////////////////////////////////////
 }

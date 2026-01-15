@@ -13,6 +13,7 @@ public interface ISchetsTool
 public abstract class StartpuntTool : ISchetsTool
 {
     protected Point startpunt;
+    protected Point eindpunt;
     protected Brush kwast;
 
     public virtual void MuisVast(SchetsControl s, Point p)
@@ -22,6 +23,7 @@ public abstract class StartpuntTool : ISchetsTool
     public virtual void MuisLos(SchetsControl s, Point p)
     {
         kwast = new SolidBrush(s.PenKleur);
+        eindpunt = p;
     }
     public abstract void MuisDrag(SchetsControl s, Point p);
     public abstract void Letter(SchetsControl s, char c);
@@ -42,9 +44,8 @@ public class TekstTool : StartpuntTool
             string tekst = c.ToString();
             SizeF sz =
             gr.MeasureString(tekst, font, this.startpunt, StringFormat.GenericTypographic);
-            gr.DrawString(tekst, font, kwast,
-                                            this.startpunt, StringFormat.GenericTypographic);
-            // gr.DrawRectangle(Pens.Black, startpunt.X, startpunt.Y, sz.Width, sz.Height);
+            gr.DrawString(tekst, font, kwast, this.startpunt, StringFormat.GenericTypographic);
+            //gr.DrawRectangle(Pens.Black, startpunt.X, startpunt.Y, sz.Width, sz.Height); // (Box around the letters)
             startpunt.X += (int)sz.Width;
             s.Invalidate();
         }
@@ -59,6 +60,8 @@ public abstract class TweepuntTool : StartpuntTool
                             , new Size(Math.Abs(p1.X - p2.X), Math.Abs(p1.Y - p2.Y))
                             );
     }
+
+
     public static Pen MaakPen(Brush b, int dikte)
     {
         Pen pen = new Pen(b, dikte);
@@ -101,6 +104,16 @@ public class RechthoekTool : TweepuntTool
     {
         g.DrawRectangle(MaakPen(kwast, 3), TweepuntTool.Punten2Rechthoek(p1, p2));
     }
+
+    /////////////////////////////////////////////////////////////////
+    public override void MuisLos(SchetsControl s, Point p)
+    {
+        kwast = new SolidBrush(s.PenKleur);
+        eindpunt = p;
+        s.acties.Add(this);
+    }
+
+    /////////////////////////////////////////////////////////////////
 }
 
 public class VolRechthoekTool : RechthoekTool
@@ -113,7 +126,26 @@ public class VolRechthoekTool : RechthoekTool
     }
 }
 
-public class LijnTool : TweepuntTool
+public class CirkelTool : TweepuntTool
+{
+    public override string ToString() { return "cirkel"; }
+
+    public override void Bezig(Graphics g, Point p1, Point p2)
+    {
+        g.DrawEllipse(MaakPen(kwast, 3), TweepuntTool.Punten2Rechthoek(p1, p2));
+    }
+}
+
+public class VolCirkelTool : CirkelTool
+{
+    public override string ToString() { return "schijf"; }
+
+    public override void Compleet(Graphics g, Point p1, Point p2)
+    {
+        g.FillEllipse(kwast, TweepuntTool.Punten2Rechthoek(p1, p2));
+    }
+}
+    public class LijnTool : TweepuntTool
 {
     public override string ToString() { return "lijn"; }
 
@@ -142,4 +174,20 @@ public class GumTool : PenTool
     {
         g.DrawLine(MaakPen(Brushes.White, 7), p1, p2);
     }
+
+    /////////////////////////////////////////////////////////////////
+    //public override void MuisVast(SchetsControl s, Point p)
+    //{
+    //    for (int i = s.Schets.elementen.Count - 1; i >= 0; i--)
+    //    {
+    //        if (s.Schets.elementen[i].Raak(p))
+    //        {
+    //            s.Schets.Verwijder(s.Schets.elementen[i]);
+    //            break;
+    //        }
+    //    }
+    //}
+
+    /////////////////////////////////////////////////////////////////
+    
 }

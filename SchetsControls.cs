@@ -1,12 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Security.Cryptography;
 using System.Windows.Forms;
 
 public class SchetsControl : UserControl
 {
     private Schets schets;
     private Color penkleur;
+    /////////////////////////////////////////////////////////////////
+    
+    public List<ISchetsTool> acties;
+
+    /////////////////////////////////////////////////////////////////
 
     public Color PenKleur
     {
@@ -24,6 +31,7 @@ public class SchetsControl : UserControl
         this.Resize += this.veranderAfmeting;
         this.veranderAfmeting(null, null);
     }
+
     protected override void OnPaintBackground(PaintEventArgs e)
     {
     }

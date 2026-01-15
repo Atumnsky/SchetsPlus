@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\He\\Documents\\GitHub\\SchetsPlus\\GrafAppCs1\\SchetsPlus.csproj",
+      "projectUniqueName": "C:\\Users\\He\\Documents\\GitHub\\SchetsPlus\\SchetsPlus\\SchetsPlus.csproj",
       "projectName": "SchetsPlus",
-      "projectPath": "C:\\Users\\He\\Documents\\GitHub\\SchetsPlus\\GrafAppCs1\\SchetsPlus.csproj",
+      "projectPath": "C:\\Users\\He\\Documents\\GitHub\\SchetsPlus\\SchetsPlus\\SchetsPlus.csproj",
       "packagesPath": "C:\\Users\\He\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\He\\Documents\\GitHub\\SchetsPlus\\GrafAppCs1\\obj\\",
+      "outputPath": "C:\\Users\\He\\Documents\\GitHub\\SchetsPlus\\SchetsPlus\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\He\\AppData\\Roaming\\NuGet\\NuGet.Config",

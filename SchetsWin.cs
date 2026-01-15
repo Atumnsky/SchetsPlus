@@ -39,12 +39,14 @@ public class SchetsWin : Form
                                 , new LijnTool()
                                 , new RechthoekTool()
                                 , new VolRechthoekTool()
+                                , new CirkelTool()
+                                , new VolCirkelTool()
                                 , new TekstTool()
                                 , new GumTool()
                                 };
         String[] deKleuren = { "Black", "Red", "Green", "Blue", "Yellow", "Magenta", "Cyan" };
 
-        this.ClientSize = new Size(700, 500);
+        this.ClientSize = new Size(700, 510);
         huidigeTool = deTools[0];
 
         schetscontrol = new SchetsControl();
@@ -125,7 +127,7 @@ public class SchetsWin : Form
         {
             RadioButton b = new RadioButton();
             b.Appearance = Appearance.Button;
-            b.Size = new Size(45, 62);
+            b.Size = new Size(48, 62);
             b.Location = new Point(10, 10 + t * 62);
             b.Tag = tool;
             b.Text = tool.ToString();
