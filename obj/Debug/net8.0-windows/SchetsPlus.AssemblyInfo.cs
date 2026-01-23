@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SchetsPlus")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+72a0b39dccc3385d714b85a9ad12eaa67fc555b1")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0944c548d1b6c0eda460ef0964482540f42269ae")]
 [assembly: System.Reflection.AssemblyProductAttribute("SchetsPlus")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SchetsPlus")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
