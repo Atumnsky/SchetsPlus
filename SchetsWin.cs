@@ -91,7 +91,60 @@ public class SchetsWin : Form
         menu.MergeAction = MergeAction.MatchOnly;
         menu.DropDownItems.Add("Sluiten", null, this.afsluiten);
         menuStrip.Items.Add(menu);
+
+        /////////////////////////////////////////////////////////////////
+        menu.DropDownItems.Add("Opslaan", null, this.opslaan);
+        menu.DropDownItems.Add("Openen", null, this.openen);
+        menu.DropDownItems.Add("Exporteer afbeelding", null, this.exporteer);
+        /////////////////////////////////////////////////////////////////
     }
+
+    /////////////////////////////////////////////////////////////////
+    private void opslaan(object sender, EventArgs e)
+    {
+        SaveFileDialog file = new SaveFileDialog();
+        file.Filter = "Schets(*.schets)|*.schets";
+
+        if (file.ShowDialog() != DialogResult.OK)
+            return;
+
+        schetscontrol.Schets.Opslaan(file.FileName);
+    }
+
+    private void openen(object sender, EventArgs e)
+    {
+        OpenFileDialog file = new OpenFileDialog();
+        file.Filter = "Schets(*.schets)|*.schets";
+
+        if (file.ShowDialog() != DialogResult.OK)
+            return;
+
+        schetscontrol.Schets.Openen(file.FileName);
+        schetscontrol.Invalidate();
+    }
+    
+    ///https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.savefiledialog?view=windowsdesktop-10.0
+    ///https://stackoverflow.com/questions/11055258/how-to-use-savefiledialog-for-saving-images-in-c
+    private void exporteer(object sender, EventArgs e)
+    {
+        SaveFileDialog file = new SaveFileDialog();
+        file.Filter = "PNG (*.png)|*.png|" + "JPEG (*.jpg)|*.jpg|" + "BITMAP (*.bmp)|*.bmp";
+
+        if(file.ShowDialog() != DialogResult.OK)
+            return;
+
+        using (Bitmap bmp = schetscontrol.Schets.NaarBitmap(schetscontrol.ClientSize))
+        {
+            if (file.FileName.EndsWith(".png"))
+                bmp.Save(file.FileName, System.Drawing.Imaging.ImageFormat.Png);
+            else if (file.FileName.EndsWith(".jpg"))
+                bmp.Save(file.FileName, System.Drawing.Imaging.ImageFormat.Jpeg);
+            else
+                bmp.Save(file.FileName, System.Drawing.Imaging.ImageFormat.Bmp);
+        }
+
+    }
+    /////////////////////////////////////////////////////////////////
 
     private void maakToolMenu(ICollection<ISchetsTool> tools)
     {

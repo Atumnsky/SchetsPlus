@@ -13,7 +13,7 @@ public class SchetsEditor : Form
         this.Controls.Add(menuStrip);
         this.maakFileMenu();
         this.maakHelpMenu();
-        this.Text = "Schets editor";
+        this.Text = "Schets Plus";
         this.IsMdiContainer = true;
         this.MainMenuStrip = menuStrip;
     }
@@ -32,7 +32,7 @@ public class SchetsEditor : Form
     }
     private void about(object o, EventArgs ea)
     {
-        MessageBox.Show("Schets versie 2.0\n(c) UU Informatica 2024"
+        MessageBox.Show("Schets versie Plus\n(c) UU Informatica 2024 (updated)"
                         , "Over \"Schets\""
                         , MessageBoxButtons.OK
                         , MessageBoxIcon.Information

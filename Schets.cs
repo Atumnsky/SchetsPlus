@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 public class Schets
@@ -80,6 +81,117 @@ public class Schets
     public void Schoon()
     {
         elementen.Clear();
+    }
+
+    public Bitmap NaarBitmap(Size size)
+    {
+        Bitmap bmp = new Bitmap(size.Width, size.Height);
+        using (Graphics g = Graphics.FromImage(bmp))
+        {
+            g.Clear(Color.White);
+            AllesTekenen(g);
+        }
+
+        return bmp;
+    }
+
+    public void Opslaan(string Schets)
+    {
+        using (StreamWriter sw = new StreamWriter(Schets))
+        {
+            foreach (var e in elementen)
+                sw.WriteLine(e.ElementInformatie());
+        }
+    }
+
+    public void Openen(string Schets)
+    {
+        elementen.Clear();
+
+        StreamReader sr = new StreamReader(Schets); 
+        string regel;
+
+        while((regel = sr.ReadLine()) != null)
+        {
+            string[] s = regel.Split(';');
+            string tool = s[0];
+
+            if (tool == "Rechthoek")
+            {
+                VoegToe(new RechthoekElement(
+                    new Point(int.Parse(s[1]), int.Parse(s[2])),
+                    new Point(int.Parse(s[3]), int.Parse(s[4])),
+                    new SolidBrush(Color.FromName(s[5]))
+                ));
+            }
+            else if (tool == "VolRechthoek")
+            {
+                VoegToe(new VolRechthoekElement(
+                    new Point(int.Parse(s[1]), int.Parse(s[2])),
+                    new Point(int.Parse(s[3]), int.Parse(s[4])),
+                    new SolidBrush(Color.FromName(s[5]))
+                ));
+            }
+            else if (tool == "Cirkel")
+            {
+                VoegToe(new CirkelElement(
+                    new Point(int.Parse(s[1]), int.Parse(s[2])),
+                    new Point(int.Parse(s[3]), int.Parse(s[4])),
+                    new SolidBrush(Color.FromName(s[5])) 
+                ));
+            }
+            else if (tool == "VolCirkel")
+            {
+                VoegToe(new VolCirkelElement(
+                    new Point(int.Parse(s[1]), int.Parse(s[2])),
+                    new Point(int.Parse(s[3]), int.Parse(s[4])),
+                    new SolidBrush(Color.FromName(s[5]))
+                ));
+            }
+            else if (tool == "Lijn")
+            {
+                VoegToe(new LijnElement(
+                    new Point(int.Parse(s[1]), int.Parse(s[2])),
+                    new Point(int.Parse(s[3]), int.Parse(s[4])),
+                    new SolidBrush(Color.FromName(s[5]))
+                ));
+            }
+
+            else if (tool == "Tekst")
+            {
+                TekstElement t = new TekstElement(
+                    new Point(int.Parse(s[1]), int.Parse(s[2])),
+                    new SolidBrush(Color.FromName(s[5]))
+                );
+
+                foreach (char c in s[4])
+                    t.VoegLetterToe(c);
+
+                float hoek = float.Parse(s[3]);
+                while (hoek > 0)
+                {
+                    t.Roteer(new Size(0, 0));
+                    hoek -= 90;
+                }
+
+                VoegToe(t);
+            }
+
+            else if (tool == "Pen")
+            {
+                Brush kwast = new SolidBrush(Color.FromName(s[s.Length - 1]));
+                PenElement pen = new PenElement(kwast);
+                                                    //De laatste lege string weghalen
+                string[] punten = s[1].Split('|', StringSplitOptions.RemoveEmptyEntries);
+                foreach (string pt in punten)
+                {
+                    string[] xy = pt.Split(',');
+                    pen.VoegPuntToe(new Point(int.Parse(xy[0]), int.Parse(xy[1])));
+                }
+
+                VoegToe(pen);
+            }
+        }
     }
     
     /////////////////////////////////////////////////////////////////

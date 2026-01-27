@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Security.Cryptography.Pkcs;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using System.Windows.Forms;
 
 public interface ISchetsTool
@@ -19,6 +21,8 @@ public interface ISchetsElement
     void Teken(Graphics g);
     bool Raak(Point p);
     void Roteer(Size canvas);
+
+    string ElementInformatie();
 }
 /////////////////////////////////////////////////////////////////
 public abstract class StartpuntTool : ISchetsTool
@@ -39,27 +43,41 @@ public abstract class StartpuntTool : ISchetsTool
     public abstract void MuisDrag(SchetsControl s, Point p);
     public abstract void Letter(SchetsControl s, char c);
 }
-
+/////////////////////////////////////////////////////////////////
 public class TekstTool : StartpuntTool
 {
+    private TekstElement huidig;
     public override string ToString() { return "tekst"; }
 
     public override void MuisDrag(SchetsControl s, Point p) { }
 
+    public override void MuisVast(SchetsControl s, Point p)
+    {
+        startpunt = p;
+        kwast = new SolidBrush(s.PenKleur);
+
+        huidig = new TekstElement(startpunt, kwast);
+        s.Schets.VoegToe(huidig);
+    }
+
     public override void Letter(SchetsControl s, char c)
     {
-        if (c >= 32)
-        {/////////////////////////////////////////////////////////////////
-            kwast = new SolidBrush(s.PenKleur);
-            s.Schets.VoegToe(new TekstElement(c.ToString(), startpunt, kwast));
-            Font font = new Font("Tahoma", 40);
-            Size sz = TextRenderer.MeasureText(c.ToString(), font);
-            startpunt.X += sz.Width;
+        if (c >= 32 && huidig != null)
+        { 
+            huidig.VoegLetterToe(c);
             s.Invalidate();
-         /////////////////////////////////////////////////////////////////
+
+            //kwast = new SolidBrush(s.PenKleur);
+            //s.Schets.VoegToe(new TekstElement(c.ToString(), startpunt, kwast));
+            //Font font = new Font("Tahoma", 40);
+            //Size sz = TextRenderer.MeasureText(c.ToString(), font);
+            //startpunt.X += (int)sz.Width/2;
+            //s.Invalidate();
+         
         }
     }
 }
+/////////////////////////////////////////////////////////////////
 
 public abstract class TweepuntTool : StartpuntTool
 {
@@ -301,16 +319,24 @@ public class RechthoekElement : ISchetsElement
 
         return boven || onder || links || rechts;
     }
+
+    public string ElementInformatie()
+    {
+        return $"Rechthoek;{p1.X};{p1.Y};{p2.X};{p2.Y};{((SolidBrush)kwast).Color.Name}";
+    }
 }
 public class VolRechthoekElement : ISchetsElement
 {
     private Rectangle rect;
     private Brush kwast;
+    private Point p1, p2;
 
     public VolRechthoekElement(Point p1, Point p2, Brush kwast)
     {
         rect = TweepuntTool.Punten2Rechthoek(p1, p2);
         this.kwast = kwast;
+        this.p1 = p1;
+        this.p2 = p2;
     }
     private Point RoteerPunt(Point p, Size s)
     {
@@ -336,17 +362,25 @@ public class VolRechthoekElement : ISchetsElement
     {
         return rect.Contains(p);
     }
+
+    public string ElementInformatie()
+    {
+        return $"VolRechthoek;{p1.X};{p1.Y};{p2.X};{p2.Y};{((SolidBrush)kwast).Color.Name}";
+    }
 }
 
 public class CirkelElement : ISchetsElement
 {
     private Rectangle rect;
     private Brush kwast;
+    private Point p1, p2;
 
     public CirkelElement(Point p1, Point p2, Brush kwast)
     {
         rect = TweepuntTool.Punten2Rechthoek(p1, p2);
         this.kwast = kwast;
+        this.p1 = p1;
+        this.p2 = p2;
     }
     private Point RoteerPunt(Point p, Size s)
     {
@@ -390,17 +424,25 @@ public class CirkelElement : ISchetsElement
         return Math.Abs(ellipsRaak - 1) <= hitBox;
 
     }
+
+    public string ElementInformatie()
+    {
+        return $"Cirkel;{p1.X};{p1.Y};{p2.X};{p2.Y};{((SolidBrush)kwast).Color.Name}";
+    }
 }
 
 public class VolCirkelElement : ISchetsElement
 {
     private Rectangle rect;
     private Brush kwast;
+    private Point p1, p2;
 
     public VolCirkelElement(Point p1, Point p2, Brush kwast)
     {
         rect = TweepuntTool.Punten2Rechthoek(p1, p2);
         this.kwast = kwast;
+        this.p1 = p1;
+        this.p2 = p2;
     }
     private Point RoteerPunt(Point p, Size s)
     {
@@ -440,6 +482,11 @@ public class VolCirkelElement : ISchetsElement
 
         return ellipsRaak <= 1.0f;
 
+    }
+
+    public string ElementInformatie()
+    {
+        return $"VolCirkel;{p1.X};{p1.Y};{p2.X};{p2.Y};{((SolidBrush)kwast).Color.Name}";
     }
 }      
        
@@ -498,6 +545,11 @@ public class LijnElement : ISchetsElement
 
         return d <= hitBox && binnenSegment;
     }
+
+    public string ElementInformatie()
+    {
+        return $"Lijn;{p1.X};{p1.Y};{p2.X};{p2.Y};{((SolidBrush)kwast).Color.Name}";
+    }
 }      
        
 public class PenElement : ISchetsElement
@@ -553,6 +605,16 @@ public class PenElement : ISchetsElement
 
             return false;
     }
+
+    public string ElementInformatie()
+    {
+        StringBuilder sb = new StringBuilder();
+        foreach (Point p in punten)
+            sb.Append($"{p.X},{p.Y}|");
+
+        sb.Append(((SolidBrush)kwast).Color.Name);
+        return sb.ToString();
+    }
 }
 
 public class TekstElement : ISchetsElement
@@ -562,12 +624,30 @@ public class TekstElement : ISchetsElement
     private Brush kwast;
     private Font font;
 
-    public TekstElement(string tekst, Point positie, Brush kwast)
+    private float hoek = 0;
+    private RectangleF hitbox;
+
+    public TekstElement(/*string tekst, */Point positie, Brush kwast)
     {
-        this.tekst = tekst;
+        this.tekst = "";
         this.positie = positie;
         this.kwast = kwast;
         this.font = new Font("Tahoma", 40);
+
+        this.hitbox = new RectangleF(positie.X, positie.Y, 1, 1);
+    }
+
+    public void VoegLetterToe(char c)
+    {
+        tekst += c;
+
+        using (Bitmap bmp = new Bitmap(1, 1))
+        using (Graphics g = Graphics.FromImage(bmp))
+        {
+            SizeF sz = g.MeasureString(tekst, font);
+
+            hitbox = new RectangleF(positie.X, positie.Y, sz.Width, sz.Height);
+        }
     }
     private Point RoteerPunt(Point p, Size s)
     {
@@ -576,21 +656,54 @@ public class TekstElement : ISchetsElement
     public void Roteer(Size canvas)
     {
         positie = RoteerPunt(positie, canvas);
+        hitbox = RoteerRechthoek(hitbox, canvas);
+        hoek += 90f;
     }
+    //https://stackoverflow.com/questions/2991589/c-sharp-rotate-a-string-180-degrees
     public void Teken(Graphics g)
     {
-        g.DrawString(tekst, font, kwast, positie);
+        g.TranslateTransform(positie.X, positie.Y);
+        g.RotateTransform(hoek);
+        g.DrawString(tekst, font, kwast, 0,0);
+        g.ResetTransform();
+    }
+
+    // De hele hitbox mee laten roteren
+    private RectangleF RoteerRechthoek(RectangleF r, Size canvas)
+    {
+        Point p1 = new Point((int)r.Left, (int)r.Top);
+        Point p2 = new Point((int)r.Right, (int)r.Top);
+        Point p3 = new Point((int)r.Right, (int)r.Bottom);
+        Point p4 = new Point((int)r.Left, (int)r.Bottom);
+
+        p1 = RoteerPunt(p1, canvas);
+        p2 = RoteerPunt(p2, canvas);
+        p3 = RoteerPunt(p3, canvas);
+        p4 = RoteerPunt(p4, canvas);
+
+        //Min/Max nemen omdat de ene groter dan de andere kan worden
+        int minX = Math.Min(Math.Min(p1.X, p2.X), Math.Min(p3.X, p4.X));
+        int maxX = Math.Max(Math.Max(p1.X, p2.X), Math.Max(p3.X, p4.X));
+        int minY = Math.Min(Math.Min(p1.Y, p2.Y), Math.Min(p3.Y, p4.Y));
+        int maxY = Math.Max(Math.Max(p1.Y, p2.Y), Math.Max(p3.Y, p4.Y));
+
+        return RectangleF.FromLTRB(minX, minY, maxX, maxY);
     }
 
     public bool Raak(Point p)
     {
-        using (Bitmap bitmap = new Bitmap(1, 1))
-        using (Graphics g = Graphics.FromImage(bitmap))
-        {
-            SizeF sz = g.MeasureString(tekst, font);
-            RectangleF r = new RectangleF(positie, sz);
-            return r.Contains(p);
-        }
+        //using (Bitmap bitmap = new Bitmap(1, 1))
+        //using (Graphics g = Graphics.FromImage(bitmap))
+        //{
+        //    SizeF sz = g.MeasureString(tekst, font);
+        //    RectangleF hitbox = new RectangleF(positie.X-10, positie.Y-10, sz.Width+20, sz.Height+20);
+            return hitbox.Contains(p);
+        //}
+    }
+
+    public string ElementInformatie()
+    {
+        return $"Tekst;{positie.X};{positie.Y};{hoek};{tekst};{((SolidBrush)kwast).Color.Name}";
     }
     /////////////////////////////////////////////////////////////////
 }
