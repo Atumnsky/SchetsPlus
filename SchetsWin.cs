@@ -13,6 +13,8 @@ public class SchetsWin : Form
     bool vast;
     private string huidigBestand = null;
 
+    public ComboBox cbb;
+
     private void veranderAfmeting(object o, EventArgs ea)
     {
         schetscontrol.Size = new Size(this.ClientSize.Width - 70
@@ -253,7 +255,7 @@ public class SchetsWin : Form
         penkleur.Location = new Point(180, 3);
         penkleur.AutoSize = true;
 
-        ComboBox cbb = new ComboBox(); paneel.Controls.Add(cbb);
+        cbb = new ComboBox(); paneel.Controls.Add(cbb);
         cbb.Location = new Point(240, 0);
         cbb.DropDownStyle = ComboBoxStyle.DropDownList;
         cbb.SelectedValueChanged += schetscontrol.VeranderKleur;
