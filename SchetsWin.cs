@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 public class SchetsWin : Form
@@ -10,6 +11,7 @@ public class SchetsWin : Form
     ISchetsTool huidigeTool;
     Panel paneel;
     bool vast;
+    private string huidigBestand = null;
 
     private void veranderAfmeting(object o, EventArgs ea)
     {
@@ -75,6 +77,8 @@ public class SchetsWin : Form
 
         menuStrip = new MenuStrip();
         menuStrip.Visible = false;
+        huidigBestand = null;
+        this.Text = "Schets - Nieuw";
         this.Controls.Add(menuStrip);
         this.maakFileMenu();
         this.maakToolMenu(deTools);
@@ -83,6 +87,32 @@ public class SchetsWin : Form
         this.maakActieButtons(deKleuren);
         this.Resize += this.veranderAfmeting;
         this.veranderAfmeting(null, null);
+        this.FormClosing += SchetsWinGesloten;
+    }
+
+    private void SchetsWinGesloten(object sender, FormClosingEventArgs e)
+    {
+        if (!schetscontrol.Schets.IsGewijzigd)
+            return;
+
+        DialogResult waarschuwing = MessageBox.Show(
+            "De schets is gewijzigd. Wilt u deze opslaan?",
+            "Opslaan?",
+            MessageBoxButtons.YesNoCancel,
+            MessageBoxIcon.Warning);
+
+        if (waarschuwing == DialogResult.Yes)
+        {
+            opslaan(null, EventArgs.Empty);
+
+            if (schetscontrol.Schets.IsGewijzigd)
+                e.Cancel = true;
+        }
+
+        else if (waarschuwing == DialogResult.Cancel)
+        {
+            e.Cancel = true;
+        }
     }
 
     private void maakFileMenu()
@@ -92,23 +122,29 @@ public class SchetsWin : Form
         menu.DropDownItems.Add("Sluiten", null, this.afsluiten);
         menuStrip.Items.Add(menu);
 
-        /////////////////////////////////////////////////////////////////
+         
         menu.DropDownItems.Add("Opslaan", null, this.opslaan);
         menu.DropDownItems.Add("Openen", null, this.openen);
         menu.DropDownItems.Add("Exporteer afbeelding", null, this.exporteer);
-        /////////////////////////////////////////////////////////////////
+         
     }
 
-    /////////////////////////////////////////////////////////////////
+     
     private void opslaan(object sender, EventArgs e)
     {
-        SaveFileDialog file = new SaveFileDialog();
-        file.Filter = "Schets(*.schets)|*.schets";
+        if (huidigBestand == null)
+        {
+            SaveFileDialog file = new SaveFileDialog();
+            file.Filter = "Schets(*.schets)|*.schets";
 
-        if (file.ShowDialog() != DialogResult.OK)
-            return;
+            if (file.ShowDialog() != DialogResult.OK)
+                return;
 
-        schetscontrol.Schets.Opslaan(file.FileName);
+            huidigBestand = file.FileName;
+        }
+
+        schetscontrol.Schets.Opslaan(huidigBestand);
+        this.Text = $"Schets - {Path.GetFileName(huidigBestand)}";
     }
 
     private void openen(object sender, EventArgs e)
@@ -121,6 +157,9 @@ public class SchetsWin : Form
 
         schetscontrol.Schets.Openen(file.FileName);
         schetscontrol.Invalidate();
+
+        huidigBestand = file.FileName;
+        this.Text = $"Schets - {Path.GetFileName(huidigBestand)}";
     }
     
     ///https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.savefiledialog?view=windowsdesktop-10.0
@@ -144,7 +183,7 @@ public class SchetsWin : Form
         }
 
     }
-    /////////////////////////////////////////////////////////////////
+     
 
     private void maakToolMenu(ICollection<ISchetsTool> tools)
     {

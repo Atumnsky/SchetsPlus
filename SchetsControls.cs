@@ -10,10 +10,10 @@ public class SchetsControl : UserControl
     private Schets schets;
     private Color penkleur;
 
-    /////////////////////////////////////////////////////////////////
+     
     private TweepuntTool previewTool;
     private Point previewPunt;
-    /////////////////////////////////////////////////////////////////
+     
     public Color PenKleur
     {
         get { return penkleur; }
@@ -27,12 +27,9 @@ public class SchetsControl : UserControl
         this.BorderStyle = BorderStyle.Fixed3D;
         this.schets = new Schets();
 
-        this.DoubleBuffered = true; // meer smooth
-        //this.Paint += this.teken;
-        //this.Resize += this.veranderAfmeting;
-        //this.veranderAfmeting(null, null);
+        this.DoubleBuffered = true;
     }
-    /////////////////////////////////////////////////////////////////
+     
     public void ZetPreview(TweepuntTool tool, Point p)
     {
         previewTool = tool;
@@ -51,32 +48,6 @@ public class SchetsControl : UserControl
             previewTool.TekenPreview(e.Graphics, previewPunt);
     }
 
-    //protected override void OnPaintBackground(PaintEventArgs e)
-    //{
-    //    e.Graphics.Clear(Color.White);
-    //}
-    //private void teken(object o, PaintEventArgs pea)
-    //{ 
-    //    schets.AllesTekenen(pea.Graphics);
-
-    //    if (previewTool != null)
-    //    {
-    //        previewTool.TekenPreview(pea.Graphics, previewPunt);
-    //    }
-
-    //}    
-    /////////////////////////////////////////////////////////////////
-    //private void veranderAfmeting(object o, EventArgs ea)
-    //{
-    //    schets.VeranderAfmeting(this.ClientSize);
-    //    this.Invalidate();
-    //}
-    //public Graphics MaakBitmapGraphics()
-    //{
-    //    Graphics g = schets.BitmapGraphics;
-    //    g.SmoothingMode = SmoothingMode.AntiAlias;
-    //    return g;
-    //}
     public void Roteer(object o, EventArgs ea)
     {
         schets.Roteer(this.ClientSize);
@@ -88,12 +59,6 @@ public class SchetsControl : UserControl
         schets.Schoon();
         this.Invalidate(true);
     }
-    //public void Roteer(object o, EventArgs ea)
-    //{
-    //    schets.VeranderAfmeting(new Size(this.ClientSize.Height, this.ClientSize.Width));
-    //    schets.Roteer();
-    //    this.Invalidate();
-    //}
     public void VeranderKleur(object obj, EventArgs ea)
     {
         string kleurNaam = ((ComboBox)obj).Text;

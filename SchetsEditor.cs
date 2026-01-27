@@ -32,7 +32,7 @@ public class SchetsEditor : Form
     }
     private void about(object o, EventArgs ea)
     {
-        MessageBox.Show("Schets versie Plus\n(c) UU Informatica 2024 (updated)"
+        MessageBox.Show("Schets versie Plus\n(c) UU Informatica 2024"
                         , "Over \"Schets\""
                         , MessageBoxButtons.OK
                         , MessageBoxIcon.Information
